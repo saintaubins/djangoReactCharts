@@ -1,0 +1,16 @@
+we will be starting off with creating the front end.
+
+npx create-react-app frontend and cd into frontend.
+
+next we will install recharts
+
+npm install recharts, and run npm start.
+
+next we will go to App.js and remove the boilerplate code, and import recharts.
+
+next we will go to recharts.org, and see the documentation. we can grab the example from the right.
+
+after importing and sample data, you should see everything render.
+
+next we will grab a bar chart, to see how that works.
+
