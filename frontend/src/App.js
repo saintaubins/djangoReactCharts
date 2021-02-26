@@ -9,10 +9,14 @@ import {
   XAxis,
   YAxis,
   Legend,
+  Pie,
+  PieChart,
+  ComposedChart,
+  Line,
 } from "recharts";
 
 function App() {
-  const data01 = [
+  const data = [
     {
       name: "Page A",
       uv: 4000,
@@ -56,47 +60,64 @@ function App() {
       amt: 2100,
     },
   ];
-
-  const data = [
-    {
-      name: "Page A",
-      uv: 4000,
-      pv: 2400,
+  const data01 = {
+    "Meta Data": {
+      "1. Information":
+        "Intraday (5min) open, high, low, close prices and volume",
+      "2. Symbol": "IBM",
+      "3. Last Refreshed": "2021-02-19 18:45:00",
+      "4. Interval": "5min",
+      "5. Output Size": "Compact",
+      "6. Time Zone": "US/Eastern",
     },
-    {
-      name: "Page B",
-      uv: 3000,
-      pv: 1398,
+    "Time Series (5min)": {
+      "2021-02-19 18:45:00": {
+        "1. open": "119.1800",
+        "2. high": "119.1800",
+        "3. low": "119.1800",
+        "4. close": "119.1800",
+        "5. volume": "1250",
+      },
+      "2021-02-19 18:25:00": {
+        "1. open": "119.1000",
+        "2. high": "119.1000",
+        "3. low": "119.1000",
+        "4. close": "119.1000",
+        "5. volume": "701",
+      },
+      "2021-02-19 18:20:00": {
+        "1. open": "119.0000",
+        "2. high": "119.0000",
+        "3. low": "119.0000",
+        "4. close": "119.0000",
+        "5. volume": "490",
+      },
+      "2021-02-19 18:05:00": {
+        "1. open": "119.1500",
+        "2. high": "119.1500",
+        "3. low": "119.1500",
+        "4. close": "119.1500",
+        "5. volume": "353",
+      },
+      "2021-02-19 18:00:00": {
+        "1. open": "119.0500",
+        "2. high": "119.0500",
+        "3. low": "119.0500",
+        "4. close": "119.0500",
+        "5. volume": "556",
+      },
+      "2021-02-19 17:35:00": {
+        "1. open": "119.0400",
+        "2. high": "119.0400",
+        "3. low": "119.0000",
+        "4. close": "119.0000",
+        "5. volume": "706",
+      },
     },
-    {
-      name: "Page C",
-      uv: 2000,
-      pv: 9800,
-    },
-    {
-      name: "Page D",
-      uv: 2780,
-      pv: 3908,
-    },
-    {
-      name: "Page E",
-      uv: 1890,
-      pv: 4800,
-    },
-    {
-      name: "Page F",
-      uv: 2390,
-      pv: 3800,
-    },
-    {
-      name: "Page G",
-      uv: 3490,
-      pv: 4300,
-    },
-  ];
+  };
   return (
     <>
-      <h1 style={{ textAlign: "center" }}>Current data for User</h1>
+      <h1 style={{ textAlign: "center" }}>Current data for this User</h1>
       <br />
       <center>
         <div className="grid-container">
@@ -117,20 +138,20 @@ function App() {
                   <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <XAxis dataKey="name" />
+              <XAxis dataKey="Time Series (5min)" />
               <YAxis />
               <CartesianGrid strokeDasharray="3 3" />
               <Tooltip />
               <Area
                 type="monotone"
-                dataKey="uv"
+                dataKey="2. high"
                 stroke="#8884d8"
                 fillOpacity={1}
                 fill="url(#colorUv)"
               />
               <Area
                 type="monotone"
-                dataKey="pv"
+                dataKey="3. low"
                 stroke="#82ca9d"
                 fillOpacity={1}
                 fill="url(#colorPv)"
@@ -152,6 +173,48 @@ function App() {
               <Bar dataKey="pv" fill="#8884d8" />
               <Bar dataKey="uv" fill="#82ca9d" />
             </BarChart>
+          </div>
+          <div className="grid-item">
+            <ComposedChart width={485} height={250} data={data}>
+              <XAxis dataKey="name" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <CartesianGrid stroke="#f5f5f5" />
+              <Area
+                type="monotone"
+                dataKey="amt"
+                fill="#8884d8"
+                stroke="#8884d8"
+              />
+              <Bar dataKey="pv" barSize={20} fill="#413ea0" />
+              <Line type="monotone" dataKey="uv" stroke="#ff7300" />
+            </ComposedChart>
+          </div>
+          <div className="grid-item">
+            <PieChart width={485} height={250}>
+              <Pie
+                data={data}
+                dataKey="uv"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={50}
+                fill="#8884d8"
+              />
+              <Pie
+                data={data}
+                dataKey="pv"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                innerRadius={60}
+                outerRadius={80}
+                fill="#82ca9d"
+                label
+              />
+              <Tooltip />
+            </PieChart>
           </div>
         </div>
       </center>
