@@ -14,3 +14,51 @@ after importing and sample data, you should see everything render.
 
 next we will grab a bar chart, to see how that works.
 
+all should be working, we will now create the backend api.
+
+*************************************************************************************
+
+pip install pipenv
+
+pipenv shell
+
+pipenv install django djangorestframework django-rest-knox
+
+django-admin startproject dashmanager
+
+cd dashmanager
+
+python manage.py startapp dashs
+
+go to settings.py installed apps, insert: 'dashs', 'rest_framework', 
+
+go make a model in dashs api, in class form
+
+we need to now make a migration, python manage.py makemigrations, python manage.py migrate.
+
+go into dashs api, create serilizers.py and inster the Serializer class.
+
+now make an api file in the dashs api, called api.py
+
+next we will create the urls, start with the root url.
+
+then create a dashs, url.py
+
+we should now have a basic crud api, we can run the server.
+
+after debug we can test it out with postman.
+
+get request from http://localhost:8000/api/dashs/
+
+https://www.youtube.com/watch?v=Uyei2iDA4Hs
+
+post queryset:
+
+{
+    "name" : "Brad",
+    "email" : "brad@example.com",
+    "message" : "please contact Brad"
+
+}
+
+Welcome to Alpha Vantage! "MA5K7ARUS689CHHY".
