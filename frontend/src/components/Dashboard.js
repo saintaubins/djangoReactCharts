@@ -118,65 +118,101 @@ export default function Dashboard() {
     },
   };
 
+  const symbol = "IBM";
+  const interval = "15min";
+  const secret = "MA5K7ARUS689CHHY";
+  const url = "https://www.alphavantage.co/query?";
+  const theFunction = "TIME_SERIES_DAILY_ADJUSTED";
+  const theOtherFunction = "TIME_SERIES_INTRADAY";
+
   const [error, setError] = useState(null);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
-  const [xVal, setXVal] = useState([]);
-  const [yVal, setYVal] = useState([]);
-  var xArr = [];
-  var yArr = [];
-  var xArrs = [];
-  var yArrs = [];
-  var myKeys = [];
+  const [rawData, setRawData] = useState([]);
 
   useEffect(() => {
-    axios
+    getData();
+  }, []);
+
+  const getData = async () => {
+    let res = await axios
       .get(
-        "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY_ADJUSTED&symbol=IBM&interval=15min&apikey=MA5K7ARUS689CHHY"
+        `${url}function=${theOtherFunction}&symbol=${symbol}&interval=${interval}&apikey=${secret}`
       )
       .then(
-        (result) => {
-          setIsLoaded(true);
-          setItems(result.data);
-          //console.log(items);
-          for (var key in items["Time Series (Daily)"]) {
-            xArr.push(key);
-            myKeys.push(key);
-            //console.log(xArr);
-            yArr.push(items["Time Series (Daily)"][key]["1. open"]);
-            //console.log(yArr);
+        (res) => {
+          if (res.data) {
+            setItems(Object.values(res.data));
           }
-          setXVal(xArr);
-          setYVal(yArr);
-          //console.log("myKeys :", myKeys);
-          [xArrs, yArrs] = [
-            items["Time Series (Daily)"][myKeys],
-            items["Meta Data"],
-          ];
-          console.log(xArrs);
         },
-
         (error) => {
-          setIsLoaded(true);
           setError(error);
+          console.log(error);
+        }
+      )
+      .then(
+        () => {
+          console.log(items.length);
+          if (items.length > 0) {
+            setRawData(Object.values(items[1]));
+            console.log("rawData = ", rawData);
+          } else {
+            console.log("called getData2 from getData");
+            getData2();
+          }
+        },
+        (error) => {
+          setError(error);
+          console.log(error);
         }
       );
-  }, []);
+  };
+  const getData2 = async () => {
+    let res = await axios
+      .get(
+        `${url}function=${theOtherFunction}&symbol=${symbol}&interval=${interval}&apikey=${secret}`
+      )
+      .then(
+        (res) => {
+          if (res.data) {
+            setItems(Object.values(res.data));
+          }
+        },
+        (error) => {
+          setError(error);
+          console.log(error);
+        }
+      )
+      .then(
+        () => {
+          console.log("items.length from getData2 is : ", items.length);
+          if (items.length == 0) {
+            setRawData(Object.values(items[1]));
+            console.log(rawData);
+          } else {
+            return axios.get(
+              `${url}function=${theOtherFunction}&symbol=${symbol}&interval=${interval}&apikey=${secret}`
+            );
+          }
+        },
+        (error) => {
+          setError(error);
+          console.log(error);
+        }
+      );
+  };
 
   if (error) {
     return <div>Error: {error.message}</div>;
-  } else if (!isLoaded) {
-    return <div>Loading...</div>;
-  } else {
+  } else if (items.length > 0 && rawData.length > 0) {
     return (
-      <>
-        {/* {xVal.map((val) => {
-          <div>{val}</div>;
-        })} */}
-
+      <div>
         <h1 style={{ textAlign: "center", marginTop: "1.4rem" }}>
-          Dashboard for this User
+          {items[0]["1. Information"].toString()}
         </h1>
+        <h2 style={{ textAlign: "center", marginTop: "1.4rem" }}>
+          Stock : {items[0]["2. Symbol"].toString()}
+        </h2>
+
         <br />
         <center>
           <div className="grid-container">
@@ -184,7 +220,7 @@ export default function Dashboard() {
               <AreaChart
                 width={400}
                 height={250}
-                data={items["Time Series (Daily)"]}
+                data={rawData}
                 margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
               >
                 <defs>
@@ -192,45 +228,45 @@ export default function Dashboard() {
                     <stop offset="5%" stopColor="#8884d8" stopOpacity={0.8} />
                     <stop offset="95%" stopColor="#8884d8" stopOpacity={0} />
                   </linearGradient>
-                  {/* <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
+                  <linearGradient id="colorPv" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
                     <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-                  </linearGradient> */}
+                  </linearGradient>
                 </defs>
-                <XAxis dataKey={xVal} />
+                <XAxis dataKey="1. open" />
                 <YAxis />
                 <CartesianGrid strokeDasharray="3 3" />
                 <Tooltip />
                 <Area
                   type="monotone"
-                  dataKey="xVal"
+                  dataKey="3. low"
                   stroke="#8884d8"
                   fillOpacity={1}
                   fill="url(#colorUv)"
                 />
-                {/* <Area
+                <Area
                   type="monotone"
-                  dataKey="3. low"
+                  dataKey="2. high"
                   stroke="#82ca9d"
                   fillOpacity={1}
                   fill="url(#colorPv)"
-                /> */}
+                />
               </AreaChart>
             </div>
             <div className="grid-item">
               <BarChart
                 width={400}
                 height={250}
-                data={data}
+                data={rawData}
                 margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
               >
                 <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" />
+                <XAxis dataKey="1. open" />
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="pv" fill="#8884d8" />
-                <Bar dataKey="uv" fill="#82ca9d" />
+                <Bar dataKey="1. open" fill="#8884d8" />
+                <Bar dataKey="2. high" fill="#82ca9d" />
               </BarChart>
             </div>
             <div className="grid-item">
@@ -277,7 +313,7 @@ export default function Dashboard() {
             </div>
           </div>
         </center>
-      </>
+      </div>
     );
-  }
+  } else return <center>Has Error</center>;
 }
