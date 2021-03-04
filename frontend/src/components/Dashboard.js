@@ -18,7 +18,7 @@ import {
 } from "recharts";
 
 export default function Dashboard() {
-  const symbol = "IBM";
+  //const symbol = "IBM";
   const interval = "15min";
   const secret = "MA5K7ARUS689CHHY";
   const url = "https://www.alphavantage.co/query?";
@@ -26,18 +26,21 @@ export default function Dashboard() {
 
   const [error, setError] = useState(null);
   const [thisData, setThisData] = useState({ hits: [] });
+  const [query, setQuery] = useState("IBM");
+  const [symbol, setSymbol] = useState("IBM");
+  const [myUrl, setMyUrl] = useState(
+    `${url}function=${theFunction}&symbol=${symbol}&interval=${interval}&apikey=${secret}`
+  );
 
   useEffect(async () => {
     const fetchData = async () => {
-      const result = await axios(
-        `${url}function=${theFunction}&symbol=${symbol}&interval=${interval}&apikey=${secret}`
-      );
+      const result = await axios(myUrl);
 
       setThisData(Object.values(result.data));
     };
 
     fetchData();
-  }, []);
+  }, [myUrl]);
 
   // converted raw data
   const convertData = (myData) => {
@@ -88,6 +91,31 @@ export default function Dashboard() {
           Stock : {convertedHeader[1]["header"]}
         </h2>
 
+        <br />
+
+        <div style={{ textAlign: "center", marginTop: "1.4rem" }}>
+          <div>
+            <label>Symbol</label>
+            <br />
+            <input
+              type="text"
+              //className="form-control"
+              onChange={(event) => setQuery(event.target.value)}
+              value={query}
+            />
+          </div>
+          <br />
+          <button
+            type="button"
+            onClick={() =>
+              setMyUrl(
+                `${url}function=${theFunction}&symbol=${query}&interval=${interval}&apikey=${secret}`
+              )
+            }
+          >
+            Search
+          </button>
+        </div>
         <br />
         <center>
           <div className="grid-container">
@@ -190,5 +218,31 @@ export default function Dashboard() {
         </center>
       </div>
     );
-  } else return <div className="my-center">Still loading data</div>;
+  } else
+    return (
+      <div className="my-center">
+        <h3>
+          Sorry the stock {query} isn't available, please check the symbol and
+          try again.
+        </h3>
+        <div style={{ textAlign: "center", marginTop: "1.4rem" }}>
+          <input
+            type="text"
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+          />
+          <br />
+          <button
+            type="submit"
+            onClick={() =>
+              setMyUrl(
+                `${url}function=${theFunction}&symbol=${query}&interval=${interval}&apikey=${secret}`
+              )
+            }
+          >
+            Search
+          </button>
+        </div>
+      </div>
+    );
 }

@@ -62,7 +62,55 @@ div.rotate_left {
   transform: rotate(-8deg);
 }
 
+input[type=text] {
+  width: 130px;
+  box-sizing: border-box;
+  border: 2px solid #222;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+  background-image: url('https://png.pngtree.com/png-vector/20190411/ourlarge/pngtree-vector-search-icon-png-image_924820.jpg');
+  background-position: 10px 10px; 
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  padding: 12px 20px 12px 40px;
+  transition: width 0.4s ease-in-out;
+  text-align: center;
+}
 
+input[type=button] {
+  width: 130px;
+  box-sizing: border-box;
+  border: 2px solid #222;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: white;
+  background-image: url('https://png.pngtree.com/png-vector/20190411/ourlarge/pngtree-vector-search-icon-png-image_924820.jpg');
+  background-position: 10px 10px; 
+  background-repeat: no-repeat;
+  background-size: 20px 20px;
+  padding: 12px 20px 12px 40px;
+  transition: width 0.4s ease-in-out;
+  text-align: center;
+}
+
+#button {
+  display: block;
+  max-width: 300px;
+  position: center;
+  margin: auto;
+  border-radius: 7px;
+  font-size: 16px;
+  color: rgb(117, 39, 39);
+  padding: 20px;
+  background-color: Transparent;
+  cursor: pointer;
+  border: 2px solid rgba(74, 119, 103, 0.9);
+}
+#button:hover { 
+  background-color: rgb(117, 39, 39);
+  color: rgba(74, 119, 103, 0.9);
+}
 
 
 
